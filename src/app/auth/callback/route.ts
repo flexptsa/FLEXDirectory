@@ -44,6 +44,15 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth`)
   }
 
+  // Ensure user exists in public.users (in case the DB trigger didn't fire)
+  await supabase.from('users').upsert({
+    id: user.id,
+    email: user.email,
+    full_name: user.user_metadata?.full_name ?? user.user_metadata?.name ?? null,
+    role: 'pending',
+    is_approved: false,
+  }, { onConflict: 'id', ignoreDuplicates: true })
+
   const email = user.email?.toLowerCase() ?? ''
 
   // Check if this email was invited as a parent or student
