@@ -44,7 +44,7 @@ const displayPhotoUrl =
     <div className="flex h-full items-center justify-center">
       <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/75 ring-1 ring-slate-200">
         <span className="text-lg font-semibold tracking-tight text-slate-400">
-          {initials || '•'}
+          {student.first_name?.charAt(0)?.toUpperCase() || '•'}
         </span>
       </div>
     </div>
