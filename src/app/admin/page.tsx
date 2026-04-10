@@ -16,6 +16,11 @@ const sections = [
     label: 'User management',
     description: 'View all users, update roles, and revoke access.',
   },
+  {
+    href: '/admin/approved-emails',
+    label: 'Approved emails',
+    description: 'Pre-approve family emails so they get instant access.',
+  },
 ]
 
 export default function AdminDashboardPage() {

@@ -92,6 +92,29 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/directory`)
   }
 
+  // Check if email is on the pre-approved list
+  const { data: approvedEmail } = await supabase
+    .from('approved_emails')
+    .select('id')
+    .eq('email', email)
+    .maybeSingle()
+
+  if (approvedEmail) {
+    const adminClient = createAdminClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      { auth: { autoRefreshToken: false, persistSession: false } }
+    )
+    await Promise.all([
+      adminClient.from('users').update({ is_approved: true, role: 'parent' }).eq('id', user.id),
+      adminClient.from('approved_emails').update({
+        claimed_at: new Date().toISOString(),
+        claimed_by_user_id: user.id,
+      }).eq('id', approvedEmail.id),
+    ])
+    return NextResponse.redirect(`${origin}/directory`)
+  }
+
   // Check if user is already approved in the users table
   const { data: dbUser } = await supabase
     .from('users')
