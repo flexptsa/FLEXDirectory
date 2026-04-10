@@ -77,14 +77,16 @@ export async function GET(request: NextRequest) {
 
   const isInvited = !!(parentMatch.data || studentMatch.data)
 
+  // Service role client — used for approved_emails (RLS blocks anon) and invite approval
+  const serviceClient = createAdminClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
+
   if (isInvited) {
     // Approve this user automatically as a 'member'
-    const adminClient = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    )
-    await adminClient
+    await serviceClient
       .from('users')
       .update({ role: 'member', is_approved: true })
       .eq('id', user.id)
@@ -92,22 +94,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/directory`)
   }
 
-  // Check if email is on the pre-approved list
-  const { data: approvedEmail } = await supabase
+  // Check if email is on the pre-approved list (use service role — RLS blocks anon)
+  console.log('[callback] checking approved_emails for:', email)
+  const { data: approvedEmail, error: approvedEmailError } = await serviceClient
     .from('approved_emails')
     .select('id')
-    .eq('email', email)
+    .eq('email', email.toLowerCase())
     .maybeSingle()
+  console.log('[callback] approved_emails result:', approvedEmail, 'error:', approvedEmailError)
 
   if (approvedEmail) {
-    const adminClient = createAdminClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!,
-      { auth: { autoRefreshToken: false, persistSession: false } }
-    )
     await Promise.all([
-      adminClient.from('users').update({ is_approved: true, role: 'parent' }).eq('id', user.id),
-      adminClient.from('approved_emails').update({
+      serviceClient.from('users').update({ is_approved: true, role: 'parent' }).eq('id', user.id),
+      serviceClient.from('approved_emails').update({
         claimed_at: new Date().toISOString(),
         claimed_by_user_id: user.id,
       }).eq('id', approvedEmail.id),
