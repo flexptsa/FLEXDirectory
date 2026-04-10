@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(find /Users/marcsebes/Documents/GitHub/FLEXDirectory/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))"
+      "Bash(find /Users/marcsebes/Documents/GitHub/FLEXDirectory/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
+      "Bash(git add:*)"
     ]
   }
 }
