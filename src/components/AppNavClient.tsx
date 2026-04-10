@@ -2,14 +2,20 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 
 interface AppNavClientProps {
   isAdmin: boolean
   email: string | null
-  signOut: () => Promise<void>
 }
 
-export function AppNavClient({ isAdmin, email, signOut }: AppNavClientProps) {
+async function handleSignOut() {
+  const supabase = createClient()
+  await supabase.auth.signOut()
+  window.location.href = '/'
+}
+
+export function AppNavClient({ isAdmin, email }: AppNavClientProps) {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
@@ -44,14 +50,12 @@ export function AppNavClient({ isAdmin, email, signOut }: AppNavClientProps) {
               Admin
             </Link>
           )}
-          <form action={signOut}>
-            <button
-              type="submit"
-              className="rounded-lg px-3 py-2 text-slate-800 transition-colors hover:text-[#002554]"
-            >
-              Sign out
-            </button>
-          </form>
+          <button
+            onClick={handleSignOut}
+            className="rounded-lg px-3 py-2 text-slate-800 transition-colors hover:text-[#002554]"
+          >
+            Sign out
+          </button>
           {email && (
             <span className="px-3 text-xs text-slate-400">{email}</span>
           )}
@@ -95,14 +99,12 @@ export function AppNavClient({ isAdmin, email, signOut }: AppNavClientProps) {
                 Admin
               </Link>
             )}
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="w-full rounded-lg px-3 py-2 text-left text-slate-800 transition-colors hover:text-[#002554]"
-              >
-                Sign out
-              </button>
-            </form>
+            <button
+              onClick={handleSignOut}
+              className="w-full rounded-lg px-3 py-2 text-left text-slate-800 transition-colors hover:text-[#002554]"
+            >
+              Sign out
+            </button>
           </div>
         </div>
       )}

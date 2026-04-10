@@ -1,9 +1,24 @@
-import Link from 'next/link'
-import { createClient } from '@/lib/supabase/server'
+'use client'
 
-export default async function WaitingPage() {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
+import { useEffect, useState } from 'react'
+
+async function handleSignOut() {
+  const supabase = createClient()
+  await supabase.auth.signOut()
+  window.location.href = '/'
+}
+
+export default function WaitingPage() {
+  const [email, setEmail] = useState<string | null>(null)
+
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setEmail(user?.email ?? null)
+    })
+  }, [])
 
   return (
     <main className="min-h-screen bg-slate-50 flex items-center justify-center px-4">
@@ -16,18 +31,16 @@ export default async function WaitingPage() {
             approve your access shortly. Check your email for a confirmation once
             you&apos;ve been approved.
           </p>
-          {user?.email && (
-            <p className="text-xs text-slate-400">Signed in as: {user.email}</p>
+          {email && (
+            <p className="text-xs text-slate-400">Signed in as: {email}</p>
           )}
           <div className="flex flex-col items-center gap-2 pt-1">
-            <form action="/auth/signout" method="POST">
-              <button
-                type="submit"
-                className="text-sm text-slate-600 underline underline-offset-2 hover:text-slate-900 transition"
-              >
-                Sign out
-              </button>
-            </form>
+            <button
+              onClick={handleSignOut}
+              className="text-sm text-slate-600 underline underline-offset-2 hover:text-slate-900 transition"
+            >
+              Sign out
+            </button>
             <Link
               href="/"
               className="text-sm text-[#002554] underline underline-offset-2 hover:text-[#003a7a] transition"
