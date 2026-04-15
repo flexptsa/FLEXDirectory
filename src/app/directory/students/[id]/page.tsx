@@ -33,14 +33,13 @@ export default async function StudentProfilePage({
 
   const { data: siblings } = await supabase
     .from('students')
-    .select('id, first_name, last_name, student_photo_url, student_photo_status, show_student_photo')
+    .select('id, first_name, last_name, student_photo_url, show_student_photo')
     .eq('family_id', student.family_id)
     .eq('is_listed_in_directory', true)
     .neq('id', id)
 
   const studentPhotoUrl =
     student.show_student_photo &&
-    student.student_photo_status === 'approved' &&
     student.student_photo_url
       ? await getSignedUrl(student.student_photo_url)
       : null
@@ -58,7 +57,6 @@ export default async function StudentProfilePage({
   for (const sib of siblings ?? []) {
     siblingPhotos[sib.id] =
       sib.show_student_photo &&
-      sib.student_photo_status === 'approved' &&
       sib.student_photo_url
         ? await getSignedUrl(sib.student_photo_url)
         : null

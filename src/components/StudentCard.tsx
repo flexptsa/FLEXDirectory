@@ -9,7 +9,6 @@ interface StudentCardProps {
 export function StudentCard({ student, photoUrl }: StudentCardProps) {
 const approvedPhotoUrl =
   student.show_student_photo &&
-  student.student_photo_status === 'approved' &&
   photoUrl
     ? photoUrl
     : null

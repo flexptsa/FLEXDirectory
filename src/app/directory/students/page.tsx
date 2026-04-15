@@ -56,7 +56,6 @@ export default async function StudentsPage({ searchParams }: PageProps) {
       student: s as StudentWithFamily,
       photoUrl:
         s.show_student_photo &&
-        s.student_photo_status === 'approved' &&
         s.student_photo_url
           ? await getSignedUrl(s.student_photo_url)
           : null,

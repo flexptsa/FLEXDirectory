@@ -2,6 +2,7 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createAdminClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
+import { getOnboardingState } from '@/lib/onboarding'
 
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url)
@@ -111,13 +112,17 @@ export async function GET(request: NextRequest) {
         claimed_by_user_id: user.id,
       }).eq('id', approvedEmail.id),
     ])
-    return NextResponse.redirect(`${origin}/directory`)
+    const onboardingState = await getOnboardingState(serviceClient, user.id, {
+      is_approved: true,
+      role: 'parent',
+    })
+    return NextResponse.redirect(`${origin}${onboardingState.isComplete ? '/directory' : '/onboarding'}`)
   }
 
   // Check if user is already approved in the users table
   const { data: dbUser } = await supabase
     .from('users')
-    .select('is_approved')
+    .select('is_approved, role')
     .eq('id', user.id)
     .single()
 
@@ -130,5 +135,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(`${origin}/auth/waiting`)
   }
 
-  return NextResponse.redirect(`${origin}/directory`)
+  const onboardingState = await getOnboardingState(supabase, user.id, dbUser)
+  return NextResponse.redirect(`${origin}${onboardingState.requiresOnboarding && !onboardingState.isComplete ? '/onboarding' : '/directory'}`)
 }

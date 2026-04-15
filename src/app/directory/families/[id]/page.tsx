@@ -21,7 +21,7 @@ export default async function FamilyProfilePage({
       deleted_at,
       parents(id, first_name, last_name, photo_url, show_photo, email, phone, show_email, show_phone, display_order),
       students(id, first_name, last_name, grade, primary_pursuit,
-               student_photo_url, student_photo_status, show_student_photo, is_listed_in_directory)
+               student_photo_url, show_student_photo, is_listed_in_directory)
     `)
     .eq('id', id)
     .is('deleted_at', null)
@@ -45,7 +45,7 @@ export default async function FamilyProfilePage({
 
   const studentPhotoUrls: Record<string, string | null> = {}
   for (const s of listedStudents) {
-    studentPhotoUrls[s.id] = s.show_student_photo && s.student_photo_status === 'approved' && s.student_photo_url
+    studentPhotoUrls[s.id] = s.show_student_photo && s.student_photo_url
       ? await getSignedUrl(s.student_photo_url) : null
   }
 

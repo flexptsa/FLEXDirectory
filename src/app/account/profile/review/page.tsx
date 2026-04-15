@@ -13,7 +13,7 @@ export default async function ProfileReviewPage() {
     .select(`
       id, family_display_name, family_bio, photo_url,
       parents(id, first_name, last_name, photo_url, show_photo, email, phone, show_email, show_phone, display_order),
-      students(id, first_name, last_name, grade, primary_pursuit, student_photo_url, student_photo_status, show_student_photo, is_listed_in_directory)
+      students(id, first_name, last_name, grade, primary_pursuit, student_photo_url, show_student_photo, is_listed_in_directory)
     `)
     .eq('owner_user_id', user.id)
     .order('created_at')
@@ -38,7 +38,7 @@ export default async function ProfileReviewPage() {
 
   const studentPhotoUrls: Record<string, string | null> = {}
   for (const s of listedStudents as any[]) {
-    studentPhotoUrls[s.id] = s.show_student_photo && s.student_photo_status === 'approved' && s.student_photo_url
+    studentPhotoUrls[s.id] = s.show_student_photo && s.student_photo_url
       ? await getSignedUrl(s.student_photo_url) : null
   }
 

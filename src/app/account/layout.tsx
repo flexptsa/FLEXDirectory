@@ -1,6 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { AppNav } from '@/components/AppNav'
+import { getOnboardingState } from '@/lib/onboarding'
 
 export default async function AccountLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient()
@@ -8,8 +9,11 @@ export default async function AccountLayout({ children }: { children: React.Reac
   if (!user) redirect('/auth')
 
   const { data: profile } = await supabase
-    .from('users').select('is_approved').eq('id', user.id).single()
+    .from('users').select('is_approved, role').eq('id', user.id).single()
   if (!profile?.is_approved) redirect('/auth/waiting')
+
+  const onboardingState = await getOnboardingState(supabase, user.id, profile)
+  if (onboardingState.requiresOnboarding && !onboardingState.isComplete) redirect('/onboarding')
 
   return (
     <div className="min-h-screen bg-slate-50">
