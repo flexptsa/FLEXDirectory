@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { ContactForm } from '@/components/ContactForm'
 import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 export default async function StudentProfilePage({
   params,
@@ -248,9 +249,7 @@ export default async function StudentProfilePage({
                           </div>
 
                           {'href' in member && member.href ? (
-                            <span className="text-sm font-medium text-[#002554]">
-                              View
-                            </span>
+                            <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
                           ) : null}
                         </>
                       )

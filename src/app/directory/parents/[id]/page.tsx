@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import Link from 'next/link'
+import { ChevronRight } from 'lucide-react'
 
 export default async function ParentProfilePage({
   params,
@@ -47,17 +48,6 @@ export default async function ParentProfilePage({
   return (
     <main className="min-h-screen bg-slate-50 px-4 pb-8 pt-0 sm:px-6">
       <div className="mx-auto max-w-4xl space-y-6">
-
-        {/* Back link */}
-        <div className="pt-6 sm:pt-8">
-          <Link
-            href="/directory/parents"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-500 transition-colors hover:text-[#002554]"
-          >
-            <span>←</span>
-            <span>Back to Parents</span>
-          </Link>
-        </div>
 
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
 
@@ -123,11 +113,11 @@ export default async function ParentProfilePage({
                     className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 transition hover:bg-slate-50"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="font-medium text-slate-900 hover:underline">
+                      <p className="font-medium text-slate-900">
                         The {family.family_display_name} Family
                       </p>
                     </div>
-                    <span className="text-sm font-medium text-[#002554]">View</span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
                   </Link>
                 </div>
               </section>
@@ -161,7 +151,7 @@ export default async function ParentProfilePage({
                           )}
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="font-medium text-slate-900 hover:underline">
+                          <p className="font-medium text-slate-900">
                             {s.first_name}{s.last_name ? ` ${s.last_name}` : ''}
                           </p>
                           <p className="text-sm text-slate-500">
@@ -170,6 +160,7 @@ export default async function ParentProfilePage({
                             {s.grade && <span className="text-[#A67C00]">{s.grade} Grade</span>}
                           </p>
                         </div>
+                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
                       </Link>
                     ))}
                   </div>

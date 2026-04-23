@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { ContactForm } from '@/components/ContactForm'
 import Link from 'next/link'
-import { MapPin } from 'lucide-react'
+import { ChevronRight, MapPin } from 'lucide-react'
 
 export default async function FamilyProfilePage({
   params,
@@ -197,7 +197,7 @@ export default async function FamilyProfilePage({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900 hover:underline">
+                            <p className="font-medium text-slate-900">
                               {s.first_name}{s.last_name ? ` ${s.last_name}` : ''}
                             </p>
                             <p className="text-sm text-slate-500">
@@ -206,6 +206,7 @@ export default async function FamilyProfilePage({
                               {s.grade && <span className="text-[#A67C00]">{s.grade} Grade</span>}
                             </p>
                           </div>
+                          <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
                         </Link>
                       ))}
                     </div>
