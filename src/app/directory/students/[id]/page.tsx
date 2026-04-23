@@ -79,7 +79,7 @@ export default async function StudentProfilePage({
       name: `${p.first_name}${p.last_name ? ' ' + p.last_name : ''}`,
       relation: 'Parent',
       photo: parentPhotoUrls[p.id],
-      href: `/directory/families/${family.id}`,
+      href: `/directory/parents/${p.id}`,
     })),
     ...(siblings ?? []).map((sib) => ({
       key: `sibling-${sib.id}`,
