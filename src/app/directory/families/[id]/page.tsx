@@ -131,7 +131,7 @@ export default async function FamilyProfilePage({
                     </h2>
                     <div className="mt-4 space-y-3">
                       {sortedParents.map((parent: any) => (
-                        <Link key={parent.id} href={`/directory/parents/${parent.id}`} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3 transition hover:bg-slate-50">
+                        <div key={parent.id} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3">
                           <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-100">
                             {parentPhotoUrls[parent.id] ? (
                               <img
@@ -148,21 +148,21 @@ export default async function FamilyProfilePage({
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-900 hover:underline">
+                            <Link href={`/directory/parents/${parent.id}`} className="font-medium text-slate-900 hover:underline">
                               {parent.first_name}{parent.last_name ? ` ${parent.last_name}` : ''}
-                            </p>
+                            </Link>
                             {parent.show_email && parent.email && (
-                              <a href={`mailto:${parent.email}`} onClick={(e) => e.stopPropagation()} className="block text-xs text-sky-700 hover:underline truncate">
+                              <a href={`mailto:${parent.email}`} className="block text-xs text-sky-700 hover:underline truncate">
                                 {parent.email}
                               </a>
                             )}
                             {parent.show_phone && parent.phone && (
-                              <a href={`tel:${parent.phone}`} onClick={(e) => e.stopPropagation()} className="block text-xs text-sky-700 hover:underline">
+                              <a href={`tel:${parent.phone}`} className="block text-xs text-sky-700 hover:underline">
                                 {parent.phone}
                               </a>
                             )}
                           </div>
-                        </Link>
+                        </div>
                       ))}
                     </div>
                   </section>
