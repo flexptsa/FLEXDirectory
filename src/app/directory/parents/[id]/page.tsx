@@ -52,12 +52,12 @@ export default async function ParentProfilePage({
         <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
 
           {/* Hero banner */}
-          <div className="h-40 bg-gradient-to-r from-[#002554] to-[#003a7a] sm:h-48" />
+          <div className="h-28 bg-gradient-to-r from-[#002554] to-[#003a7a] sm:h-36" />
 
           <div className="px-5 pb-8 sm:px-8 sm:pb-10">
 
             {/* Avatar + name centered, overlapping banner */}
-            <div className="-mt-16 flex flex-col items-center text-center sm:-mt-20">
+            <div className="-mt-14 flex flex-col items-center text-center sm:-mt-16">
               <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-slate-100 ring-2 ring-[#CB9700] shadow-md sm:h-36 sm:w-36">
                 {parentPhotoUrl ? (
                   <img
