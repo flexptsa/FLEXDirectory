@@ -1,7 +1,6 @@
 import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { PageHeader } from '@/components/PageHeader'
-import { ContactForm } from '@/components/ContactForm'
 import Link from 'next/link'
 import { MapPin } from 'lucide-react'
 
@@ -69,18 +68,10 @@ export default async function FamiliesPage() {
                     </div>
 
                     <div className="flex-1 min-w-0">
-                      <div className="flex items-start justify-between gap-4">
-                        <div>
-                          <h2 className="text-xl font-semibold text-slate-900">The {family.family_display_name} Family</h2>
-                          {parentNames && (
-                            <p className="text-sm text-slate-500">{parentNames}</p>
-                          )}
-                        </div>
-                        {/* Re-enable pointer events for the contact button */}
-                        <div className="pointer-events-auto">
-                          <ContactForm recipientFamilyId={family.id} recipientFamilyName={family.family_display_name} />
-                        </div>
-                      </div>
+                      <h2 className="text-xl font-semibold text-slate-900">The {family.family_display_name} Family</h2>
+                      {parentNames && (
+                        <p className="text-sm text-slate-500">{parentNames}</p>
+                      )}
 
                       {family.show_location && family.general_location && (
                         <div className="mt-2 flex items-center gap-1 text-xs text-slate-500">
