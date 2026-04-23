@@ -97,7 +97,7 @@ export default async function ParentsPage({ searchParams }: PageProps) {
             {parentCards.map(({ parent, family, photoUrl, listedStudents }) => (
               <Link
                 key={parent.id}
-                href={`/directory/families/${family.id}`}
+                href={`/directory/parents/${parent.id}`}
                 className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 {/* Portrait photo */}

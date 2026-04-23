@@ -360,6 +360,13 @@ export function OnboardingFlow({
     })
   }
 
+  async function handleSignOut() {
+    const { createClient } = await import('@/lib/supabase/client')
+    const supabase = createClient()
+    await supabase.auth.signOut()
+    window.location.href = '/'
+  }
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto mb-6 flex max-w-3xl items-center justify-between">
@@ -368,7 +375,17 @@ export function OnboardingFlow({
           alt="Crossroads FLEX PTSA"
           className="h-12 w-auto"
         />
-        <p className="hidden text-sm text-slate-500 sm:block">Private FLEX family directory</p>
+        <div className="flex items-center gap-3">
+          {userEmail && (
+            <span className="hidden text-xs text-slate-400 sm:block">{userEmail}</span>
+          )}
+          <button
+            onClick={handleSignOut}
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-[#002554]"
+          >
+            Sign out
+          </button>
+        </div>
       </div>
 
       {step === 'welcome' && (
