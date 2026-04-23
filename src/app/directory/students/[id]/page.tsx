@@ -298,24 +298,6 @@ export default async function StudentProfilePage({
               </section>
             )}
 
-            <section className="mt-5 rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
-              <div className="max-w-2xl">
-                <h2 className="text-xl font-semibold tracking-tight text-slate-900">
-                  Contact Family
-                </h2>
-                <p className="mt-1 text-sm leading-6 text-slate-500">
-                  Reach out to the {family.family_display_name} about shared interests,
-                  carpools, study groups, or general connection.
-                </p>
-              </div>
-
-              <div className="mt-5">
-                <ContactForm
-                  recipientFamilyId={family.id}
-                  recipientFamilyName={family.family_display_name}
-                />
-              </div>
-            </section>
           </div>
         </div>
       </div>

@@ -126,7 +126,7 @@ export default async function FamilyProfilePage({
                 {/* Parents */}
                 {sortedParents.length > 0 && (
                   <section className="rounded-2xl bg-slate-50 p-4">
-                    <h2 className="border-l-4 border-[#CB9700] pl-2 text-sm font-semibold uppercase tracking-wide text-[#002554]">
+                    <h2 className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.14em] text-[#002554]"><span className="h-6 w-1 rounded-full bg-[#CB9700]/90" />
                       Parents &amp; Guardians
                     </h2>
                     <div className="mt-4 space-y-3">
@@ -162,7 +162,7 @@ export default async function FamilyProfilePage({
                 {/* Students */}
                 {listedStudents.length > 0 && (
                   <section className="rounded-2xl bg-slate-50 p-4">
-                    <h2 className="border-l-4 border-[#CB9700] pl-2 text-sm font-semibold uppercase tracking-wide text-[#002554]">
+                    <h2 className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.14em] text-[#002554]"><span className="h-6 w-1 rounded-full bg-[#CB9700]/90" />
                       Students
                     </h2>
                     <div className="mt-4 space-y-3">
@@ -207,7 +207,7 @@ export default async function FamilyProfilePage({
                 const facts = family.family_bio.split('\n').map((l: string) => l.trim()).filter(Boolean)
                 return facts.length > 0 ? (
                   <section className="mt-4 rounded-2xl bg-slate-50 p-4 lg:col-span-2">
-                    <h2 className="border-l-4 border-[#CB9700] pl-2 text-sm font-semibold uppercase tracking-wide text-[#002554]">
+                    <h2 className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.14em] text-[#002554]"><span className="h-6 w-1 rounded-full bg-[#CB9700]/90" />
                       Fun Facts
                     </h2>
                     <ul className="mt-3 space-y-2 text-base text-slate-700">
