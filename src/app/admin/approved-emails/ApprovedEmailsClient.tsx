@@ -8,7 +8,7 @@ type ApprovedEmail = {
   email: string
   added_at: string
   claimed_at: string | null
-  claimed_by_user: { email: string }[] | null
+  claimed_by_user: { email: string } | { email: string }[] | null
 }
 
 export function ApprovedEmailsClient({ emails }: { emails: ApprovedEmail[] }) {
@@ -129,7 +129,9 @@ export function ApprovedEmailsClient({ emails }: { emails: ApprovedEmail[] }) {
                     )}
                   </td>
                   <td className="px-5 py-3 text-slate-500 hidden md:table-cell">
-                    {row.claimed_by_user?.[0]?.email ?? '—'}
+                    {(Array.isArray(row.claimed_by_user)
+                      ? row.claimed_by_user[0]?.email
+                      : row.claimed_by_user?.email) ?? '—'}
                   </td>
                   <td className="px-5 py-3 text-right">
                     {row.claimed_at ? (
