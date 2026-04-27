@@ -4,7 +4,9 @@
       "Bash(find /Users/marcsebes/Documents/GitHub/FLEXDirectory/src -type f \\\\\\(-name *.tsx -o -name *.ts \\\\\\))",
       "Bash(git add:*)",
       "Bash(git commit:*)",
-      "Bash(git push:*)"
+      "Bash(git push:*)",
+      "Bash(claude doctor:*)",
+      "Bash(npx tsc *)"
     ]
   }
 }

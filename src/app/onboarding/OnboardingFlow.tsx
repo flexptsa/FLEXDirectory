@@ -3,7 +3,7 @@
 import { useRef, useState, useTransition } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { Camera, Check, ChevronDown, Plus, Upload, X } from 'lucide-react'
+import { Camera, Check, ChevronDown, ChevronRight, Plus, Upload, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -367,6 +367,45 @@ export function OnboardingFlow({
     window.location.href = '/'
   }
 
+  const previewFamilyName = family.family_display_name || initialFamily?.family_display_name || ''
+  const previewFamilyAvatarUrl = family.photo.preview ?? familyPhotoUrl
+
+  const previewParents = [
+    primary.first_name ? {
+      name: `${primary.first_name}${primary.last_name ? ' ' + primary.last_name : ''}`,
+      photoUrl: primary.photo.preview ?? (primaryParent ? parentPhotoUrls[primaryParent.id] : null),
+    } : null,
+    showSecondParent && secondary.first_name ? {
+      name: `${secondary.first_name}${secondary.last_name ? ' ' + secondary.last_name : ''}`,
+      photoUrl: secondary.photo.preview ?? (secondaryParent ? parentPhotoUrls[secondaryParent.id] : null),
+    } : null,
+  ].filter((p): p is { name: string; photoUrl: string | null } => p !== null)
+
+  const previewParentNames = previewParents.map(p => p.name).join(' & ')
+
+  const savedPreviewStudents = initialStudents.map(s => ({
+    id: s.id,
+    name: `${s.first_name}${s.last_name ? ' ' + s.last_name : ''}`,
+    pursuit: s.primary_pursuit,
+    grade: s.grade,
+    photoUrl: s.show_student_photo ? studentPhotoUrls[s.id] : null,
+  }))
+
+  const currentStudentAlreadySaved = !student.first_name || initialStudents.some(
+    s => s.first_name === student.first_name && (s.last_name ?? '') === (student.last_name ?? '')
+  )
+
+  const previewStudents = [
+    ...savedPreviewStudents,
+    !currentStudentAlreadySaved ? {
+      id: 'current',
+      name: `${student.first_name}${student.last_name ? ' ' + student.last_name : ''}`,
+      pursuit: student.pursuit,
+      grade: student.grade,
+      photoUrl: student.photo.preview ?? null,
+    } : null,
+  ].filter((s): s is { id: string; name: string; pursuit: string; grade: string; photoUrl: string | null } => s !== null)
+
   return (
     <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-10">
       <div className="mx-auto mb-6 flex max-w-3xl items-center justify-between">
@@ -729,57 +768,105 @@ export function OnboardingFlow({
         <StepShell eyebrow="Step 5 of 5" title="You're live in the directory!">
           <div className="space-y-6">
             <p className="text-lg leading-7 text-slate-600">This is how other FLEX families will see you.</p>
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                <div className="flex items-center gap-3">
-                  <div className="h-14 w-14 overflow-hidden rounded-full bg-white ring-1 ring-slate-200">
-                    {family.photo.preview ?? familyPhotoUrl ? (
-                      <img src={family.photo.preview ?? familyPhotoUrl ?? ''} alt="Family" className="h-full w-full object-cover object-top" />
+
+            <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm">
+              <div className="h-28 bg-gradient-to-r from-[#002554] to-[#003a7a] sm:h-36" />
+
+              <div className="px-5 pb-8 sm:px-8 sm:pb-10">
+                <div className="-mt-14 flex flex-col items-center text-center sm:-mt-16">
+                  <div className="h-32 w-32 overflow-hidden rounded-full border-4 border-white bg-slate-100 ring-2 ring-[#CB9700] shadow-md sm:h-36 sm:w-36">
+                    {previewFamilyAvatarUrl ? (
+                      <img src={previewFamilyAvatarUrl} alt={previewFamilyName} className="h-full w-full object-cover object-top" />
                     ) : (
-                      <div className="flex h-full items-center justify-center text-lg font-semibold text-slate-400">
-                        {family.family_display_name.charAt(0) || 'F'}
+                      <div className="flex h-full items-center justify-center">
+                        <svg className="h-14 w-14 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                        </svg>
                       </div>
                     )}
                   </div>
-                  <div>
-                    <p className="font-semibold text-slate-900">The {family.family_display_name || initialFamily?.family_display_name} Family</p>
-                    <p className="text-sm text-slate-500">
-                      {primary.first_name} {primary.last_name}
-                    </p>
+
+                  <div className="mt-4 space-y-1">
+                    <h2 className="text-4xl font-semibold text-slate-900 sm:text-5xl">
+                      The {previewFamilyName} Family
+                    </h2>
+                    {previewParentNames && (
+                      <p className="text-lg text-slate-500">{previewParentNames}</p>
+                    )}
                   </div>
                 </div>
-              </div>
 
-              <div className="rounded-xl border border-slate-200 bg-slate-50 p-4">
-                {(initialStudents[0] || student.first_name) ? (
-                  <div className="flex items-center gap-3">
-                    <div className="h-14 w-14 overflow-hidden rounded-full bg-white ring-1 ring-slate-200">
-                      {student.photo.preview ?? (initialStudents[0] ? studentPhotoUrls[initialStudents[0].id] : null) ? (
-                        <img
-                          src={student.photo.preview ?? (initialStudents[0] ? studentPhotoUrls[initialStudents[0].id] : '') ?? ''}
-                          alt="Student"
-                          className="h-full w-full object-cover object-top"
-                        />
-                      ) : (
-                        <div className="flex h-full items-center justify-center text-lg font-semibold text-slate-400">
-                          {(student.first_name || initialStudents[0]?.first_name || 'S').charAt(0)}
+                {(previewParents.length > 0 || previewStudents.length > 0) && (
+                  <div className="mt-8 grid gap-4 lg:grid-cols-2">
+                    {previewParents.length > 0 && (
+                      <section className="rounded-2xl bg-slate-50 p-4">
+                        <h2 className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.14em] text-[#002554]">
+                          <span className="h-6 w-1 rounded-full bg-[#CB9700]/90" />
+                          Parents &amp; Guardians
+                        </h2>
+                        <div className="mt-4 space-y-3">
+                          {previewParents.map((parent, i) => (
+                            <div key={i} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3">
+                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-100">
+                                {parent.photoUrl ? (
+                                  <img src={parent.photoUrl} alt={parent.name} className="h-full w-full object-cover object-top" />
+                                ) : (
+                                  <div className="flex h-full items-center justify-center">
+                                    <svg className="h-6 w-6 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-slate-900">{parent.name}</p>
+                              </div>
+                              <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                            </div>
+                          ))}
                         </div>
-                      )}
-                    </div>
-                    <div>
-                      <p className="font-semibold text-slate-900">
-                        {student.first_name || initialStudents[0]?.first_name} {student.last_name || initialStudents[0]?.last_name}
-                      </p>
-                      <p className="text-sm text-slate-500">
-                        {student.pursuit || initialStudents[0]?.primary_pursuit} · {student.grade || initialStudents[0]?.grade} Grade
-                      </p>
-                    </div>
+                      </section>
+                    )}
+
+                    {previewStudents.length > 0 && (
+                      <section className="rounded-2xl bg-slate-50 p-4">
+                        <h2 className="flex items-center gap-3 text-sm font-bold uppercase tracking-[0.14em] text-[#002554]">
+                          <span className="h-6 w-1 rounded-full bg-[#CB9700]/90" />
+                          Students
+                        </h2>
+                        <div className="mt-4 space-y-3">
+                          {previewStudents.map((s) => (
+                            <div key={s.id} className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3">
+                              <div className="h-12 w-12 shrink-0 overflow-hidden rounded-full bg-slate-100">
+                                {s.photoUrl ? (
+                                  <img src={s.photoUrl} alt={s.name} className="h-full w-full object-cover object-top" />
+                                ) : (
+                                  <div className="flex h-full items-center justify-center">
+                                    <svg className="h-6 w-6 text-slate-300" fill="currentColor" viewBox="0 0 24 24">
+                                      <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                                    </svg>
+                                  </div>
+                                )}
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <p className="font-medium text-slate-900">{s.name}</p>
+                                <p className="text-sm text-slate-500">
+                                  <span className="text-[#002554]">{s.pursuit}</span>
+                                  {s.grade && <span className="text-slate-400"> · </span>}
+                                  {s.grade && <span className="text-[#A67C00]">{s.grade} Grade</span>}
+                                </p>
+                              </div>
+                              <ChevronRight className="h-4 w-4 shrink-0 text-slate-400" />
+                            </div>
+                          ))}
+                        </div>
+                      </section>
+                    )}
                   </div>
-                ) : (
-                  <p className="text-sm text-slate-500">Your student card is ready.</p>
                 )}
               </div>
             </div>
+
             <div className="flex flex-wrap gap-3">
               <Button asChild className="rounded-lg bg-[#002554] hover:bg-[#003a7a]">
                 <Link href="/directory">Go to Directory</Link>
