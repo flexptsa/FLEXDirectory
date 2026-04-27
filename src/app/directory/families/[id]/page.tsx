@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { ContactForm } from '@/components/ContactForm'
 import Link from 'next/link'
-import { ChevronRight, MapPin } from 'lucide-react'
+import { ChevronRight } from 'lucide-react'
 
 export default async function FamilyProfilePage({
   params,
@@ -16,8 +16,7 @@ export default async function FamilyProfilePage({
   const { data: family } = await supabase
     .from('families')
     .select(`
-      id, family_display_name, general_location, family_bio, photo_url,
-      show_location, open_to_carpool, open_to_study_groups, open_to_social_meetups,
+      id, family_display_name, family_bio, photo_url,
       deleted_at,
       parents(id, first_name, last_name, photo_url, show_photo, email, phone, show_email, show_phone, display_order),
       students(id, first_name, last_name, grade, primary_pursuit,
@@ -52,12 +51,6 @@ export default async function FamilyProfilePage({
   const parentNames = sortedParents
     .map((p: any) => `${p.first_name}${p.last_name ? ' ' + p.last_name : ''}`)
     .join(' & ')
-
-  const openTo = [
-    family.open_to_carpool && 'Carpool',
-    family.open_to_study_groups && 'Study groups',
-    family.open_to_social_meetups && 'Social meetups',
-  ].filter(Boolean) as string[]
 
   return (
     <main className="min-h-screen bg-slate-50 px-4 pb-8 pt-0 sm:px-6">
@@ -96,25 +89,6 @@ export default async function FamilyProfilePage({
                   <p className="text-lg text-slate-500">{parentNames}</p>
                 )}
               </div>
-
-              {/* Location + open-to tags */}
-              {(family.show_location && family.general_location || openTo.length > 0) && (
-                <div className="mt-3 flex flex-wrap items-center justify-center gap-2 text-sm">
-                  {family.show_location && family.general_location && (
-                    <span className="flex items-center gap-1 text-slate-500">
-                      <MapPin className="h-3.5 w-3.5" />
-                      {family.general_location}
-                    </span>
-                  )}
-                  {openTo.map(tag => (
-                    <span key={tag} className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-700">
-                      Open to {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-
 
 
             </div>

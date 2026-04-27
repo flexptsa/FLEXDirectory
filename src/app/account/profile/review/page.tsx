@@ -111,12 +111,6 @@ export default async function ProfileReviewPage() {
                           <p className="font-medium text-slate-900">
                             {parent.first_name}{parent.last_name ? ` ${parent.last_name}` : ''}
                           </p>
-                          {parent.show_email && parent.email && (
-                            <p className="text-xs text-sky-700 truncate">{parent.email}</p>
-                          )}
-                          {parent.show_phone && parent.phone && (
-                            <p className="text-xs text-sky-700">{parent.phone}</p>
-                          )}
                         </div>
                       </div>
                     ))}
