@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useState, useTransition } from 'react'
-import { addApprovedEmails, deleteApprovedEmail } from './actions'
+import { addApprovedEmails, deleteApprovedEmail, resetApprovedEmail } from './actions'
 
 type ApprovedEmail = {
   id: string
@@ -49,6 +49,12 @@ export function ApprovedEmailsClient({ emails }: { emails: ApprovedEmail[] }) {
   function handleDelete(id: string) {
     startTransition(async () => {
       await deleteApprovedEmail(id)
+    })
+  }
+
+  function handleReset(id: string) {
+    startTransition(async () => {
+      await resetApprovedEmail(id)
     })
   }
 
@@ -126,7 +132,15 @@ export function ApprovedEmailsClient({ emails }: { emails: ApprovedEmail[] }) {
                     {row.claimed_by_user?.[0]?.email ?? '—'}
                   </td>
                   <td className="px-5 py-3 text-right">
-                    {!row.claimed_at && (
+                    {row.claimed_at ? (
+                      <button
+                        onClick={() => handleReset(row.id)}
+                        disabled={isPending}
+                        className="text-xs text-amber-500 hover:text-amber-700 disabled:opacity-50 transition"
+                      >
+                        Reset
+                      </button>
+                    ) : (
                       <button
                         onClick={() => handleDelete(row.id)}
                         disabled={isPending}
