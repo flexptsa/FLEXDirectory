@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { StudentCard } from '@/components/StudentCard'
 import { PageHeader } from '@/components/PageHeader'
+import { StudentsFilterBar } from '@/components/StudentsFilterBar'
 import type { StudentWithFamily } from '@/types'
 
 interface PageProps {
@@ -17,6 +18,11 @@ interface PageProps {
 export default async function StudentsPage({ searchParams }: PageProps) {
   const params = await searchParams
   const supabase = await createClient()
+
+  const { data: clubTags } = await supabase
+    .from('club_tags')
+    .select('id, name')
+    .order('name')
 
   const q = params.q?.trim() ?? ''
   const grades = Array.isArray(params.grade) ? params.grade : params.grade ? [params.grade] : []
@@ -77,7 +83,7 @@ export default async function StudentsPage({ searchParams }: PageProps) {
             <input
               name="q"
               defaultValue={q}
-              placeholder="Search students by name, pursuit, club, grade level..."
+              placeholder="Search by name or pursuit..."
               className="w-full rounded-2xl border border-slate-200 px-4 py-2.5 text-sm text-slate-900 outline-none placeholder:text-slate-400 focus:border-sky-400"
             />
             <button
@@ -88,6 +94,13 @@ export default async function StudentsPage({ searchParams }: PageProps) {
             </button>
           </form>
         </div>
+
+        <StudentsFilterBar
+          clubTags={clubTags ?? []}
+          currentGrades={grades}
+          currentClub={club}
+          currentQ={q}
+        />
 
         {activeFilters.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
