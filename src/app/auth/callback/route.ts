@@ -106,7 +106,7 @@ export async function GET(request: NextRequest) {
 
   if (approvedEmail) {
     await Promise.all([
-      serviceClient.from('users').update({ is_approved: true, role: 'parent' }).eq('id', user.id),
+      serviceClient.from('users').upsert({ id: user.id, email: user.email, is_approved: true, role: 'parent' }, { onConflict: 'id' }),
       serviceClient.from('approved_emails').update({
         claimed_at: new Date().toISOString(),
         claimed_by_user_id: user.id,
