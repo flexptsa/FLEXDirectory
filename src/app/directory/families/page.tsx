@@ -42,7 +42,7 @@ export default async function FamiliesPage() {
 
         <p className="text-sm text-slate-500">{familiesWithPhotos.length} families</p>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-3">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {familiesWithPhotos.map(({ family, avatarUrl, parentNames }) => {
             const listedStudents = (family.students ?? []).filter((s: any) => s.is_listed_in_directory)
 
