@@ -42,7 +42,7 @@ export default async function FamiliesPage() {
 
         <p className="text-sm text-slate-500">{familiesWithPhotos.length} families</p>
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {familiesWithPhotos.map(({ family, avatarUrl, parentNames }) => {
             const listedStudents = (family.students ?? []).filter((s: any) => s.is_listed_in_directory)
 
@@ -53,7 +53,7 @@ export default async function FamiliesPage() {
                 className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
                 {/* Photo */}
-                <div className="aspect-[4/5] overflow-hidden bg-slate-100">
+                <div className="h-48 overflow-hidden bg-slate-100">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
@@ -80,7 +80,7 @@ export default async function FamiliesPage() {
                   {listedStudents.length > 0 && (
                     <div className="mt-2 space-y-1">
                       {listedStudents.map((s: any) => (
-                        <p key={s.id} className="text-xs font-medium text-sky-700 leading-snug truncate">
+                        <p key={s.id} className="text-xs font-medium text-sky-700 leading-snug">
                           {s.first_name}{s.last_name ? ` ${s.last_name}` : ''}
                           {s.primary_pursuit || s.grade
                             ? <span className="font-normal text-sky-600"> · {[s.primary_pursuit, s.grade ? `${s.grade} Grade` : null].filter(Boolean).join(' · ')}</span>
