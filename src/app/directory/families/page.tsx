@@ -81,9 +81,9 @@ export default async function FamiliesPage() {
                     <div className="mt-2 space-y-1">
                       {listedStudents.map((s: any) => (
                         <p key={s.id} className="text-sm font-medium text-sky-700 leading-snug">
-                          {s.first_name}{s.last_name ? ` ${s.last_name}` : ''}
+                          {s.first_name}
                           {s.primary_pursuit || s.grade
-                            ? <span className="font-normal text-sky-600"> · {[s.primary_pursuit, s.grade ? `${s.grade} Grade` : null].filter(Boolean).join(' · ')}</span>
+                            ? <span className="font-normal text-sky-600"> · {[s.primary_pursuit, s.grade ?? null].filter(Boolean).join(' · ')}</span>
                             : null}
                         </p>
                       ))}
