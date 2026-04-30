@@ -42,7 +42,7 @@ export default async function FamiliesPage() {
 
         <p className="text-sm text-slate-500">{familiesWithPhotos.length} families</p>
 
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {familiesWithPhotos.map(({ family, avatarUrl, parentNames }) => {
             const listedStudents = (family.students ?? []).filter((s: any) => s.is_listed_in_directory)
 
@@ -50,19 +50,19 @@ export default async function FamiliesPage() {
               <Link
                 key={family.id}
                 href={`/directory/families/${family.id}`}
-                className="group overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+                className="group flex items-start gap-4 overflow-hidden rounded-3xl border border-slate-200 bg-white p-4 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
               >
-                {/* Photo */}
-                <div className="h-48 overflow-hidden bg-slate-100">
+                {/* Square thumbnail */}
+                <div className="h-24 w-24 shrink-0 overflow-hidden rounded-2xl bg-slate-100">
                   {avatarUrl ? (
                     <img
                       src={avatarUrl}
                       alt={`The ${family.family_display_name} Family`}
-                      className="h-full w-full object-cover object-top transition duration-300 group-hover:scale-[1.03]"
+                      className="h-full w-full object-cover object-center transition duration-300 group-hover:scale-[1.03]"
                     />
                   ) : (
-                    <div className="flex h-full items-center justify-center">
-                      <span className="text-4xl font-semibold text-slate-300">
+                    <div className="flex h-full w-full items-center justify-center">
+                      <span className="text-3xl font-semibold text-slate-300">
                         {family.family_display_name.charAt(0)}
                       </span>
                     </div>
@@ -70,17 +70,17 @@ export default async function FamiliesPage() {
                 </div>
 
                 {/* Text */}
-                <div className="p-3 sm:p-4">
-                  <h3 className="text-sm font-semibold leading-snug text-slate-900">
+                <div className="min-w-0 flex-1 pt-0.5">
+                  <h3 className="text-base font-semibold leading-snug text-slate-900">
                     The {family.family_display_name} Family
                   </h3>
                   {parentNames && (
-                    <p className="mt-0.5 text-xs text-slate-500 leading-snug">{parentNames}</p>
+                    <p className="mt-0.5 text-sm text-slate-500 leading-snug">{parentNames}</p>
                   )}
                   {listedStudents.length > 0 && (
                     <div className="mt-2 space-y-1">
                       {listedStudents.map((s: any) => (
-                        <p key={s.id} className="text-xs font-medium text-sky-700 leading-snug">
+                        <p key={s.id} className="text-sm font-medium text-sky-700 leading-snug">
                           {s.first_name}{s.last_name ? ` ${s.last_name}` : ''}
                           {s.primary_pursuit || s.grade
                             ? <span className="font-normal text-sky-600"> · {[s.primary_pursuit, s.grade ? `${s.grade} Grade` : null].filter(Boolean).join(' · ')}</span>
