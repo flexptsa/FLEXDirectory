@@ -37,7 +37,7 @@ export function AppNavClient({ isAdmin, email }: AppNavClientProps) {
             Directory
           </Link>
           <Link
-            href="/account/review"
+            href="/account/profile/review"
             className="rounded-lg px-3 py-2 text-slate-800 transition-colors hover:text-[#002554]"
           >
             My Family
