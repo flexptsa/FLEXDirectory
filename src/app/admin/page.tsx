@@ -21,6 +21,11 @@ const sections = [
     label: 'Approved emails',
     description: 'Pre-approve family emails so they get instant access.',
   },
+  {
+  href: '/admin/grade-advance',
+  label: 'End-of-year grade advance',
+  description: 'Advance student grades and mark graduating students as alumni.',
+},
 ]
 
 export default function AdminDashboardPage() {
