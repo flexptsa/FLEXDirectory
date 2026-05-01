@@ -6,16 +6,33 @@ const GRADE_PROGRESSION: Record<string, string> = {
   '11th': '12th',
 }
 
+const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
+  'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+}
+
 Deno.serve(async (req) => {
+  // Handle CORS preflight
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { status: 204, headers: CORS_HEADERS })
+  }
+
   // Only allow POST
   if (req.method !== 'POST') {
-    return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 })
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
 
   // Verify caller is an admin via the Authorization header
   const authHeader = req.headers.get('Authorization')
   if (!authHeader) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
 
   const supabase = createClient(
@@ -23,7 +40,7 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
   )
 
-  // Verify the calling user is an admin
+  // Verify the calling user is a moderator or super_admin
   const userClient = createClient(
     Deno.env.get('SUPABASE_URL')!,
     Deno.env.get('SUPABASE_ANON_KEY')!,
@@ -31,15 +48,21 @@ Deno.serve(async (req) => {
   )
   const { data: { user } } = await userClient.auth.getUser()
   if (!user) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 })
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
   const { data: callerProfile } = await supabase
     .from('users')
     .select('role')
     .eq('id', user.id)
     .single()
-  if (callerProfile?.role !== 'admin') {
-    return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403 })
+  if (callerProfile?.role !== 'moderator' && callerProfile?.role !== 'super_admin') {
+    return new Response(JSON.stringify({ error: 'Forbidden' }), {
+      status: 403,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
 
   // Parse dry_run flag from request body
@@ -57,10 +80,13 @@ Deno.serve(async (req) => {
     .eq('is_alumni', false)
 
   if (studentsError) {
-    return new Response(JSON.stringify({ error: studentsError.message }), { status: 500 })
+    return new Response(JSON.stringify({ error: studentsError.message }), {
+      status: 500,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
 
-  const advancing: { id: string; name: string; from: string; to: string }[] = []
+  const advancing: { id: string; name: string; from: string; to: string; family_id: string }[] = []
   const becomingAlumni: { id: string; name: string; family_id: string }[] = []
 
   for (const student of students ?? []) {
@@ -72,7 +98,7 @@ Deno.serve(async (req) => {
         from: student.grade,
         to: nextGrade,
         family_id: student.family_id,
-      } as any)
+      })
     } else if (student.grade === '12th') {
       becomingAlumni.push({
         id: student.id,
@@ -97,7 +123,10 @@ Deno.serve(async (req) => {
     .eq('is_alumni', false)
 
   if (familiesError) {
-    return new Response(JSON.stringify({ error: familiesError.message }), { status: 500 })
+    return new Response(JSON.stringify({ error: familiesError.message }), {
+      status: 500,
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
+    })
   }
 
   const alumniStudentIds = new Set(becomingAlumni.map(s => s.id))
@@ -130,7 +159,7 @@ Deno.serve(async (req) => {
   if (dryRun) {
     return new Response(JSON.stringify(preview), {
       status: 200,
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
     })
   }
 
@@ -176,6 +205,6 @@ Deno.serve(async (req) => {
 
   return new Response(JSON.stringify({ ...preview, committed: true }), {
     status: 200,
-    headers: { 'Content-Type': 'application/json' },
+    headers: { ...CORS_HEADERS, 'Content-Type': 'application/json' },
   })
 })
