@@ -92,7 +92,7 @@ export default async function DirectoryHomePage() {
 
   return (
     <main className="min-h-screen bg-gradient-to-b from-slate-50 via-white to-white">
-      <section className="bg-gradient-to-b from-[#0A2F5A] to-[#08264A] px-4 py-6 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
+      <section className="bg-gradient-to-b from-[#0A2F5A] to-[#000] px-4 py-6 sm:px-6 sm:py-6 lg:px-8 lg:py-7">
         <div className="mx-auto max-w-6xl">
           <div className="max-w-4xl">
             {greeting && (
