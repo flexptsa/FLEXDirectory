@@ -72,8 +72,8 @@ export default async function StudentsPage({ searchParams }: PageProps) {
   const activeFilters = [q, ...grades, pursuit, club].filter(Boolean)
 
   return (
-    <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
-      <div className="mx-auto max-w-7xl space-y-4 sm:space-y-5">
+    <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 sm:py-10">
+      <div className="mx-auto max-w-7xl space-y-6">
         <PageHeader
           title="Students"
           subtitle="Crossroads FLEX PTSA"
