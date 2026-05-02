@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { PageHeader } from '@/components/PageHeader'
+import { DirectoryTabs } from '@/components/DirectoryTabs'
 import Link from 'next/link'
 
 interface PageProps {
@@ -48,9 +49,11 @@ export default async function ParentsPage({ searchParams }: PageProps) {
     <main className="min-h-screen bg-slate-50 px-4 py-8 sm:px-6 sm:py-10">
       <div className="mx-auto max-w-7xl space-y-6">
         <PageHeader
-          title="Parents & Guardians"
+          title="Parents"
           subtitle="Crossroads FLEX PTSA"
         />
+
+        <DirectoryTabs />
 
         {/* Search bar */}
         <div className="rounded-3xl border border-slate-200 bg-white p-3 shadow-sm">

@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { StudentCard } from '@/components/StudentCard'
 import { PageHeader } from '@/components/PageHeader'
+import { DirectoryTabs } from '@/components/DirectoryTabs'
 import { StudentsFilterBar } from '@/components/StudentsFilterBar'
 import type { StudentWithFamily } from '@/types'
 
@@ -74,9 +75,11 @@ export default async function StudentsPage({ searchParams }: PageProps) {
     <main className="min-h-screen bg-slate-50 px-4 py-6 sm:px-6 sm:py-8">
       <div className="mx-auto max-w-7xl space-y-4 sm:space-y-5">
         <PageHeader
-          title="Student Directory"
+          title="Students"
           subtitle="Crossroads FLEX PTSA"
         />
+
+        <DirectoryTabs />
 
         <div className="rounded-[1.75rem] border border-slate-200 bg-white p-2.5 shadow-sm sm:p-3">
           <form className="flex flex-col gap-2 sm:flex-row sm:items-center">

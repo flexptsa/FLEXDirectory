@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { getSignedUrl } from '@/lib/actions/photo'
 import { PageHeader } from '@/components/PageHeader'
+import { DirectoryTabs } from '@/components/DirectoryTabs'
 import Link from 'next/link'
 
 export default async function FamiliesPage() {
@@ -39,6 +40,8 @@ export default async function FamiliesPage() {
           title="Families"
           subtitle="Crossroads FLEX PTSA"
         />
+
+        <DirectoryTabs />
 
         <p className="text-sm text-slate-500">{familiesWithPhotos.length} families</p>
 
