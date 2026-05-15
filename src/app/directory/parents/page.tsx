@@ -24,7 +24,7 @@ export default async function ParentsPage({ searchParams }: PageProps) {
       )
     `)
     .is('families.deleted_at', null)
-    .order('first_name')
+   .order('last_name').order('first_name')
 
   if (q) query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%`)
 

@@ -47,8 +47,8 @@ export default async function StudentsPage({ searchParams }: PageProps) {
   if (q) query = query.or(`first_name.ilike.%${q}%,last_name.ilike.%${q}%,primary_pursuit.ilike.%${q}%`)
   if (grades.length > 0) query = query.in('grade', grades)
   if (pursuit) query = query.ilike('primary_pursuit', `%${pursuit}%`)
-  if (params.sort === 'grade') query = query.order('grade').order('first_name')
-  else query = query.order('first_name')
+if (params.sort === 'grade') query = query.order('grade').order('last_name').order('first_name')
+else query = query.order('last_name').order('first_name')
 
   let { data: students } = (await query) as { data: any[] | null }
 
